@@ -2,66 +2,57 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-
+using System.Linq;
 
 public class click : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragHandler, IPointerEnterHandler
 {
-    GameObject main;
-    //private LineRenderer lr;
+    main main;
+    public LineRenderer lr;
     private Vector3 pos;
-    private bool drag = false;
     void Start()
     {
         //lr = GetComponent<LineRenderer>();
-        //lr.widthMultiplier = 0.3f;
-        //lr.enabled = false;
+        main = GameObject.FindGameObjectWithTag("line").GetComponent<main>();
+        lr.widthMultiplier = 0.3f;
+        lr.enabled = false;
     }
-
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        Debug.Log("test");
+        if (!main.newList.Contains(this.gameObject))
+        {
+            main.newList.Add(this.gameObject);
+        }
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        Debug.Log("lol");
+        
+        lr.enabled = true;
+        Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        pos.z = 0;
+
+        lr.SetPosition(0, main.newList.LastOrDefault().transform.position);
+        lr.SetPosition(1, pos);
 
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        Debug.Log("nice");
+        lr.SetPosition(0, Vector3.zero);
+        lr.SetPosition(1, Vector3.zero);
+        lr.enabled = false;
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log("Enter");
+        if (eventData.pointerDrag)
+        {
+            if (!main.newList.Contains(this.gameObject))
+            {
+                main.newList.Add(this.gameObject);
+            }
+        }
+      
     }
-
-
-    //void OnMouseDrag()
-    //{
-    //drag = true;
-    //Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-    //pos.z = 0;
-    //lr.enabled = true;
-
-    //lr.SetPosition(0, this.gameObject.transform.position);
-    //lr.SetPosition(1, pos);
-    //Debug.Log("rtwetewt" + this.gameObject.name);
-    //}
-
-    //void OnMouseEnter() {
-    //Debug.Log(this.gameObject.name);
-    //if(drag)
-    //{
-    //    Debug.Log(this.gameObject.name);
-    //    if (!GameObject.FindGameObjectWithTag("line").GetComponent<main>().newList.Contains(this.gameObject))
-    //    {
-    //        GameObject.FindGameObjectWithTag("line").GetComponent<main>().newList.Add(this.gameObject);
-    //    }
-
-    //}
-    //}
 }
