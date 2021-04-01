@@ -7,7 +7,6 @@ public class main : MonoBehaviour
     private LineRenderer lr;
     private Vector3 pos;
 
-
     // Start is called before the first frame update
     void Start()
     {
